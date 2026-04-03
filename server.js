@@ -1,6 +1,7 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
@@ -12,18 +13,18 @@ app.post("/send-email", async (request, response) => {
     let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "vilvamani145@gmail.com",
-            pass: "tswgghdzhodxzpxr"
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
         }
     });
 
     let mailOptions = {
-    from: "vilvamani145@gmail.com",
-    to: "vilvamani145@gmail.com",
-    replyTo: email,
-    subject: `New message from ${name}`,
-    text: message
-};
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER,
+        replyTo: email,
+        subject: `New message from ${name}`,
+        text: message
+    };
 
     try {
         await transporter.sendMail(mailOptions);
@@ -34,6 +35,8 @@ app.post("/send-email", async (request, response) => {
     }
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
